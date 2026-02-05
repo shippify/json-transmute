@@ -31,8 +31,6 @@ jobs:
           npm ci
       - name: Publish
         uses: JS-DevTools/npm-publish@v1
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN_WRITE_ACCESS }}
         with:
           token: ${{ secrets.NPM_TOKEN_WRITE_ACCESS }}
           access: restricted
