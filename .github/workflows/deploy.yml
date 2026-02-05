@@ -1,0 +1,40 @@
+name: Publish
+
+on:
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Validate version format
+        run: |
+            if [[ "${{ github.ref }}" != "refs/heads/master" ]]; then
+                cp ./scripts/validate-rc-version.js validate-version.js
+            else
+                cp ./scripts/validate-prod-version.js validate-version.js
+            fi
+            node validate-version.js
+
+      - name: Install dependencies
+        run: |
+          cd "${GITHUB_WORKSPACE}/"
+          npm ci
+      - name: Publish
+        uses: JS-DevTools/npm-publish@v1
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN_WRITE_ACCESS }}
+        with:
+          token: ${{ secrets.NPM_TOKEN_WRITE_ACCESS }}
+          access: restricted
+          check-version: true
+          tag: ${{ github.ref == 'refs/heads/master' && 'latest' || 'rc' }}
