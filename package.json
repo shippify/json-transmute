@@ -1,6 +1,6 @@
 {
   "name": "@shippify/json-transmute",
-  "version": "0.4.16",
+  "version": "0.4.16-rc.0",
   "description": "Transmute javscript object data into common denominator formats defined via JSON",
   "main": "index.js",
   "publishConfig": {
